@@ -9,14 +9,14 @@ function AppBody() {
   const toDateRef = useRef('')
   const fromDateRef = useRef('')
   const [set,seSet]=useState(false)
-  const [filterArrayAtSameDate, setFilterArrayAtSameDate] = useState()
-  const [filterArrayAtOneDate, setFilterArrayAtOneDate] = useState()
+  const [filterArrayAtSameDate, setFilterArrayAtSameDate] = useState(1)
+  const [filterArrayAtOneDate, setFilterArrayAtOneDate] = useState(1)
 
-  const [filterArrayAtSecondDate, setFilterArrayAtSecondDate] = useState()
-  const [filterArrayAtThirdDate, setFilterArrayAtThirdDate] = useState()
-  const [filterArrayAtFourthDate, setFilterArrayAtFourthDate] = useState()
-  const [filterArrayAtFifthDate, setFilterArrayAtFifthDate] = useState()
-  const [totalOrders,setTotalOrders]=useState()
+  const [filterArrayAtSecondDate, setFilterArrayAtSecondDate] = useState(1)
+  const [filterArrayAtThirdDate, setFilterArrayAtThirdDate] = useState(1)
+  const [filterArrayAtFourthDate, setFilterArrayAtFourthDate] = useState(1)
+  const [filterArrayAtFifthDate, setFilterArrayAtFifthDate] = useState(1)
+  const [totalOrders,setTotalOrders]=useState(1)
   const getDaysArray = function (start, end) {
     for (
       var arr = [], dt = new Date(start);
@@ -81,34 +81,32 @@ function AppBody() {
       0
     ))
     seSet(true)
-const num=filterArrayAtSameDate+filterArrayAtOneDate+filterArrayAtSecondDate+filterArrayAtThirdDate+filterArrayAtFourthDate+filterArrayAtFifthDate;
-setTotalOrders(num)  
-
   }
+
   return (
     <div className='w-full h-full flex flex-col place-items-center'>
       <div className='flex flex-col space-y-3 shadow-md  bg-purple-100 w-fit h-fit p-10'>
 
       <input type="date" ref={toDateRef} />
       <input type="date" ref={fromDateRef} />
-      <button onClick={get}>get</button>
+      <button onClick={get}>Get</button>
 
       </div>
       <div className='w-1/3 flex'>
       {set&&<Pie
         data={{
           labels: [
-            'Scheduled Same Day in Percentage ',
-            'Scheduled One Day Before in Percentage',
-            'Scheduled Two Day Before in Percentage',
-            'Scheduled Three Day Before in Percentage',
-            'Scheduled Four Day Before in Percentage',
-            'Scheduled Five Day Before in Percentage'
+            'Scheduled Same Day ',
+            'Scheduled One Day Before',
+            'Scheduled Two Day Before',
+            'Scheduled Three Day Before',
+            'Scheduled Four Day Before',
+            'Scheduled Five Day Before'
           ],
           datasets: [
             {
               label: 'Times Scheduled for Five Days',
-              data: [((filterArrayAtSameDate/totalOrders)*100).toPrecision(2),((filterArrayAtOneDate/totalOrders)*100).toPrecision(2),((filterArrayAtSecondDate/totalOrders)*100).toPrecision(2),((filterArrayAtThirdDate/totalOrders)*100).toPrecision(2),((filterArrayAtFourthDate/totalOrders)*100).toPrecision(2),((filterArrayAtFifthDate/totalOrders)*100).toPrecision(2)],
+              data: [filterArrayAtSameDate,filterArrayAtOneDate,filterArrayAtSecondDate,filterArrayAtThirdDate,filterArrayAtFourthDate,filterArrayAtFifthDate],
               backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
