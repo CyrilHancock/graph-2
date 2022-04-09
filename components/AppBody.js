@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRef } from 'react'
 import data from '../data/data'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
@@ -8,7 +8,7 @@ function AppBody() {
 
   const toDateRef = useRef('')
   const fromDateRef = useRef('')
-  const [set,seSet]=useState(false)
+  const [set, seSet] = useState(false)
   const [filterArrayAtSameDate, setFilterArrayAtSameDate] = useState(1)
   const [filterArrayAtOneDate, setFilterArrayAtOneDate] = useState(1)
 
@@ -16,7 +16,7 @@ function AppBody() {
   const [filterArrayAtThirdDate, setFilterArrayAtThirdDate] = useState(1)
   const [filterArrayAtFourthDate, setFilterArrayAtFourthDate] = useState(1)
   const [filterArrayAtFifthDate, setFilterArrayAtFifthDate] = useState(1)
-  const [totalOrders,setTotalOrders]=useState(1)
+  const [totalOrders, setTotalOrders] = useState()
   const getDaysArray = function (start, end) {
     for (
       var arr = [], dt = new Date(start);
@@ -55,82 +55,121 @@ function AppBody() {
     const fiveDayBefore = filteredArray.map((d) =>
       d.filter((da) => da.schedule_time.charAt(9) == da.item_date.charAt(9) - 5)
     )
-    setFilterArrayAtSameDate(sameDay.reduce(
-      (acc, element) => acc + element.length,
-      0
-    ))
-    setFilterArrayAtOneDate(oneDayBefore.reduce(
-      (acc, element) => acc + element.length,
-      0
-    ))
+    setFilterArrayAtSameDate(
+      sameDay.reduce((acc, element) => acc + element.length, 0)
+    )
+    setFilterArrayAtOneDate(
+      oneDayBefore.reduce((acc, element) => acc + element.length, 0)
+    )
 
-    setFilterArrayAtSecondDate(twoDayBefore.reduce(
-      (acc, element) => acc + element.length,
-      0
-    ))
-    setFilterArrayAtThirdDate(threeDayBefore.reduce(
-      (acc, element) => acc + element.length,
-      0
-    ))
-    setFilterArrayAtFourthDate(fourDayBefore.reduce(
-      (acc, element) => acc + element.length,
-      0
-    ))
-    setFilterArrayAtFifthDate(fiveDayBefore.reduce(
-      (acc, element) => acc + element.length,
-      0
-    ))
+    setFilterArrayAtSecondDate(
+      twoDayBefore.reduce((acc, element) => acc + element.length, 0)
+    )
+    setFilterArrayAtThirdDate(
+      threeDayBefore.reduce((acc, element) => acc + element.length, 0)
+    )
+    setFilterArrayAtFourthDate(
+      fourDayBefore.reduce((acc, element) => acc + element.length, 0)
+    )
+    setFilterArrayAtFifthDate(
+      fiveDayBefore.reduce((acc, element) => acc + element.length, 0)
+    )
     seSet(true)
   }
 
   return (
-    <div className='w-full h-full flex flex-col place-items-center'>
-      <div className='flex flex-col space-y-3 shadow-md  bg-purple-100 w-fit h-fit p-10'>
-
-      <input type="date" ref={toDateRef} />
-      <input type="date" ref={fromDateRef} />
-      <button onClick={get}>Get</button>
-
+    <div className="flex h-full w-full flex-col place-items-center m-10">
+      <div className="flex h-fit w-fit flex-col  space-y-3 bg-purple-100 p-10 shadow-md">
+        <input type="date" ref={toDateRef} />
+        <input type="date" ref={fromDateRef} />
+        <button onClick={get}>Get</button>
       </div>
-      <div className='w-1/3 flex'>
-      {set&&<Pie
-        data={{
-          labels: [
-            'Scheduled Same Day ',
-            'Scheduled One Day Before',
-            'Scheduled Two Day Before',
-            'Scheduled Three Day Before',
-            'Scheduled Four Day Before',
-            'Scheduled Five Day Before'
-          ],
-          datasets: [
-            {
-              label: 'Times Scheduled for Five Days',
-              data: [filterArrayAtSameDate,filterArrayAtOneDate,filterArrayAtSecondDate,filterArrayAtThirdDate,filterArrayAtFourthDate,filterArrayAtFifthDate],
-              backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
+      <div className="flex w-1/3 flex-col place-items-center mt-5">
+        {set && (
+         <>
+          <p>All Values are in Percentage</p>
+          <Pie
+            data={{
+              labels: [
+                'Scheduled Same Day  ',
+                'Scheduled One Day Before ',
+                'Scheduled Two Day Before ',
+                'Scheduled Three Day Before ',
+                'Scheduled Four Day Before ',
+                'Scheduled Five Day Before ',
               ],
-              borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
+              datasets: [
+                {
+                  label: 'Times Scheduled for Five Days',
+                  data: [
+                    ((filterArrayAtSameDate / (filterArrayAtSameDate +
+                      filterArrayAtOneDate +
+                      filterArrayAtSecondDate +
+                      filterArrayAtThirdDate +
+                      filterArrayAtFourthDate +
+                      filterArrayAtFifthDate)) *
+                      100).toPrecision(2),
+                    ((filterArrayAtOneDate /( filterArrayAtSameDate +
+                      filterArrayAtOneDate +
+                      filterArrayAtSecondDate +
+                      filterArrayAtThirdDate +
+                      filterArrayAtFourthDate +
+                      filterArrayAtFifthDate)) *
+                      100).toPrecision(2),
+                    ((filterArrayAtSecondDate /( filterArrayAtSameDate +
+                      filterArrayAtOneDate +
+                      filterArrayAtSecondDate +
+                      filterArrayAtThirdDate +
+                      filterArrayAtFourthDate +
+                      filterArrayAtFifthDate) )*
+                      100).toPrecision(2),
+                    ((filterArrayAtThirdDate /( filterArrayAtSameDate +
+                      filterArrayAtOneDate +
+                      filterArrayAtSecondDate +
+                      filterArrayAtThirdDate +
+                      filterArrayAtFourthDate +
+                      filterArrayAtFifthDate)) *
+                      100).toPrecision(2),
+                    ((filterArrayAtFourthDate / (filterArrayAtSameDate +
+                      filterArrayAtOneDate +
+                      filterArrayAtSecondDate +
+                      filterArrayAtThirdDate +
+                      filterArrayAtFourthDate +
+                      filterArrayAtFifthDate) )*
+                      100).toPrecision(2),
+                    ((filterArrayAtFifthDate /( filterArrayAtSameDate +
+                      filterArrayAtOneDate +
+                      filterArrayAtSecondDate +
+                      filterArrayAtThirdDate +
+                      filterArrayAtFourthDate +
+                      filterArrayAtFifthDate) )*
+                      100).toPrecision(2),
+                  ],
+                  backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                  ],
+                  borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                  ],
+                  borderWidth: 1,
+                },
               ],
-              borderWidth: 1,
-            },
-          ],
-        }}
-      />}
-      
+            }}
+          />
+
+         
+         </>        )}
       </div>
-      
     </div>
   )
 }
