@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   return (
     <div className="flex min-h-screen flex-col items-center   bg-gray-200">
       <Head>
-        <title>Create Next App</title>
+        <title>Food Graph Pattern</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className='bg-purple-500 p-5 flex place-items-center w-full'>
